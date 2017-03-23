@@ -1,9 +1,16 @@
 package com.ianrufus.betting;
 
+import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class RouletteBet {
+	@JsonProperty
 	private int _numberBetOn;
+	@JsonProperty
 	private double _betAmount;
+	@JsonProperty
 	private BetType _betType;
+	
 	private boolean _hasPaidOut;
 	
 	public int getNumberBetOn() { return this._numberBetOn; }

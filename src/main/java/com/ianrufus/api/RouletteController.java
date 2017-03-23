@@ -3,6 +3,7 @@ package com.ianrufus.api;
 import java.util.Date;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,8 +27,10 @@ public class RouletteController {
 	private IGameHistory _gameHistory;
 	
 	@RequestMapping("bet")
-	public void PlaceBet(@RequestParam(value="betAmount") double betAmount) {
-		
+	public void PlaceBet(@RequestBody RouletteBet bet) {
+		int userId = _userManager.GetCurrentUserId();
+		int gameId = 1;
+		_bettingService.RegisterBet(userId, gameId, bet);
 	}
 	   
 	@RequestMapping("winnings") 
