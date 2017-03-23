@@ -26,14 +26,13 @@ public class RouletteBet {
 		if (!_hasPaidOut) {
 			_hasPaidOut = true;
 			
-			if (_betType == null
-					&& result == _numberBetOn) {
-				// If BetType is null, a single number has been bet on
-				return _betAmount * 36;
-			}
-			else {
-				// Otherwise it's a pre-defined bet
+			if (_betType != null) {
+				// If BetType isn't null, it's a pre-defined bet
 				return GetSpecialBetWinnings(result);
+			}
+			else if (result == _numberBetOn) {
+				// Otherwise a single number has been bet on
+				return _betAmount * 36;
 			}
 		}
 		
