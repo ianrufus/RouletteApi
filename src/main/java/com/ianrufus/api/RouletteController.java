@@ -7,14 +7,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ianrufus.betting.IRouletteBettingService;
+import com.ianrufus.betting.*;
+import com.ianrufus.account.*;
+import com.ianrufus.database.*;
+import com.ianrufus.game.*;
  
 @RestController 
 @RequestMapping("/roulette/") 
 public class RouletteController { 
  
 	@Autowired 
-	private IRouletteBettingService _bettingService; 
+	private IRouletteBettingService _bettingService;
+	@Autowired
+	private IUserManager _userManager;
+	@Autowired
+	private IDbClient _dbClient;
+	@Autowired
+	private IGameHistory _gameHistory;
 	
 	@RequestMapping("bet")
 	public void PlaceBet(@RequestParam(value="betAmount") double betAmount) {
