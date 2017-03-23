@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import com.ianrufus.betting.*;
 import com.ianrufus.account.*;
@@ -27,10 +29,11 @@ public class RouletteController {
 	private IGameHistory _gameHistory;
 	
 	@RequestMapping("bet")
-	public void PlaceBet(@RequestBody RouletteBet bet) {
+	public ResponseEntity<String> PlaceBet(@RequestBody RouletteBet bet) {
 		int userId = _userManager.GetCurrentUserId();
 		int gameId = 1;
 		_bettingService.RegisterBet(userId, gameId, bet);
+		return new ResponseEntity<String>(HttpStatus.OK);
 	}
 	   
 	@RequestMapping("winnings") 
