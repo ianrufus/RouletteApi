@@ -53,9 +53,12 @@ public class RouletteController {
 	}
 	
 	@RequestMapping("numberofbets")
-	public int GetNumberOfBets(@RequestParam(value="gameId") int gameId) {
-		// Get the total number of bets placed for a specific game
-		return 0;
+	public ResponseEntity<Integer> GetNumberOfBets(@RequestParam(value="gameId") int gameId) {
+		if (gameId > 0) {
+			int numberOfBets =  _gameHistory.GetNumberOfBets(gameId); 
+		    return new ResponseEntity<Integer>(numberOfBets, HttpStatus.OK); 
+		}
+		return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping("totalpayout")

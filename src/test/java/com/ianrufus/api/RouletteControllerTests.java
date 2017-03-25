@@ -220,13 +220,31 @@ public class RouletteControllerTests {
 	
 	// Nubmer of bets
 	@Test
-	public void zeroReturnedWhenNoBetsPlaced() throws Exception {
-		
+	public void getNumberOfBetsWithNegativeGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/numberofbets")
+				.param("gameId", "-10"))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
-	public void numberReturnedWhenBetsPlaced() throws Exception {
+	public void getNumberOfBetsWithZeroGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/numberofbets")
+				.param("gameId", "0"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getNumberOfBetsWithNoGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/numberofbets"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getNumberOfBetsCallsGetNumberOfBetsOnGameHistory() throws Exception {
+		mockMvc.perform(post("/roulette/numberofbets")
+				.param("gameId", "10"));
 		
+		Mockito.verify(this.gameHistory, Mockito.times(1)).GetNumberOfBets(10);
 	}
 
 }
