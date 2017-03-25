@@ -42,8 +42,14 @@ public class RouletteController {
 	}
 	   
 	@RequestMapping("winnings") 
-	public double GetWinnings(@RequestParam(value="gameId") int gameId) { 
-		return _bettingService.GetWinnings(); 
+	public ResponseEntity<Double> GetWinnings(@RequestParam(value="gameId") int gameId,
+								@RequestParam(value="gameResult") int gameResult) { 
+		if (gameId > 0 && gameResult >= 0) {
+			int userId = _userManager.GetCurrentUserId();
+			double winnings = _bettingService.GetWinnings(userId, gameId, gameResult);
+			return new ResponseEntity<Double>(winnings, HttpStatus.OK);
+		}
+		return new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping("numberofbets")

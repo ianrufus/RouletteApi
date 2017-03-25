@@ -4,16 +4,24 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.google.gson.Gson;
 import com.ianrufus.account.FakeUserManager;
@@ -152,25 +160,62 @@ public class RouletteControllerTests {
 				.andExpect(status().isBadRequest());
 	}
 	
+	@Test
+	public void placeBetCallsRegisterBet() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(20);
+		bet.setNumberBetOn(5);
+		bet.setGameId(1);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json));
+		
+		Mockito.verify(this.bettingService, Mockito.times(1)).RegisterBet(eq(123), any(RouletteBet.class));
+	}
+	
 	// Winnings
 	@Test
-	public void noBetsForUserReturnsZeroWinnings() throws Exception {
-		
+	public void getWinningsWithNegativeGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/winnings")
+				.param("gameId", "-10")
+				.param("gameResult", "5"))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
-	public void noBetsForGivenGameReturnsZeroWinnings() throws Exception {
-		
+	public void getWinningsWithZeroGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/winnings")
+				.param("gameId", "0")
+				.param("gameResult", "5"))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
-	public void losingBetReturnsZeroWinnings() throws Exception {
-		
+	public void getWinningsWithNoGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/winnings")
+				.param("gameResult", "5"))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
-	public void winningBetReturnsWinnings() throws Exception {
-		// Specific bet winnings will be tested on the RouletteBet class
+	public void getWinningsWithNegativeGameResultReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/winnings")
+				.param("gameId", "10")
+				.param("gameResult", "-5"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getWinningsCallsGetWinningsOnBettingService() throws Exception {
+		mockMvc.perform(post("/roulette/winnings")
+				.param("gameId", "10")
+				.param("gameResult", "5"));
+		
+		Mockito.verify(this.bettingService, Mockito.times(1)).GetWinnings(123, 10, 5);
 	}
 	
 	// Nubmer of bets

@@ -1,6 +1,7 @@
 package com.ianrufus.betting;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
@@ -16,8 +17,27 @@ public class FakeBettingService implements IRouletteBettingService {
 		_userBets = new HashMap<Integer, List<RouletteBet>>();
 	}
 	
-	public double GetWinnings() { 
-		return 20; 
+  	public List<RouletteBet> GetUserBetsForGame(int userId, int gameId) {
+  		if (_userBets.containsKey(userId)) {
+  			List<RouletteBet> userBets = _userBets.get(userId);
+  			List<RouletteBet> userBetsForGame = userBets.stream()
+  								.filter(b -> b.getGameId() == gameId)
+  								.collect(Collectors.toList());
+  			return userBetsForGame;
+  		}
+  		return null;
+  	}
+  
+	public double GetWinnings(int userId, int gameId, int gameResult) {
+		if (_userBets.containsKey(userId)) {
+		    List<RouletteBet> userBetsForGame = GetUserBetsForGame(userId, gameId);
+		    double winnings = 0;
+		    for (RouletteBet bet : userBetsForGame) {
+		      winnings += bet.GetWinnings(gameResult);
+		    }
+		    return winnings;
+		  }
+		  return 0;
 	}
 	
 	public void RegisterBet(int userId, RouletteBet bet) {
