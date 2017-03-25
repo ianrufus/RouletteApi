@@ -7,4 +7,8 @@ public class FakeUserManager implements IUserManager {
 	public int GetCurrentUserId() {
 		return 123;
 	}
+	
+	public double GetUserBalance(int userId) {
+		return 150;
+	}
 }

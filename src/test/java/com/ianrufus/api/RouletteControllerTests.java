@@ -44,6 +44,7 @@ public class RouletteControllerTests {
 	@Before
 	public void setup() {
 		given(this.userManager.GetCurrentUserId()).willReturn(123);
+		given(this.userManager.GetUserBalance(123)).willReturn(150d);
 	}
 	
 	// Place Bet
@@ -102,7 +103,17 @@ public class RouletteControllerTests {
 	
 	@Test
 	public void betAmountHigherThanUserBalanceReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(200);
+		bet.setNumberBetOn(5);
 		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isBadRequest());
 	}
 	
 	// Winnings
