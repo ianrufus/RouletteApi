@@ -31,10 +31,11 @@ public class RouletteController {
 	@RequestMapping("bet")
 	public ResponseEntity<String> PlaceBet(@RequestBody RouletteBet bet) {
 		int userId = _userManager.GetCurrentUserId();
-		if (bet.getBetAmount() > 0
+		if (bet.getGameId() > 0
+				&& bet.getBetAmount() > 0
 				&& _userManager.GetUserBalance(userId) > bet.getBetAmount()) {			
 			int gameId = 1;
-			_bettingService.RegisterBet(userId, gameId, bet);
+			_bettingService.RegisterBet(userId, bet);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
 		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);		

@@ -53,6 +53,7 @@ public class RouletteControllerTests {
 		RouletteBet bet = new RouletteBet();
 		bet.setBetAmount(10);
 		bet.setNumberBetOn(5);
+		bet.setGameId(1);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(bet);
@@ -76,6 +77,7 @@ public class RouletteControllerTests {
 		RouletteBet bet = new RouletteBet();
 		bet.setBetAmount(0);
 		bet.setNumberBetOn(5);
+		bet.setGameId(1);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(bet);
@@ -91,6 +93,7 @@ public class RouletteControllerTests {
 		RouletteBet bet = new RouletteBet();
 		bet.setBetAmount(-10);
 		bet.setNumberBetOn(5);
+		bet.setGameId(1);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(bet);
@@ -106,6 +109,39 @@ public class RouletteControllerTests {
 		RouletteBet bet = new RouletteBet();
 		bet.setBetAmount(200);
 		bet.setNumberBetOn(5);
+		bet.setGameId(1);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void zeroGameIdReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(20);
+		bet.setNumberBetOn(5);
+		bet.setGameId(0);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void negativeGameIdReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(20);
+		bet.setNumberBetOn(5);
+		bet.setGameId(-1);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(bet);

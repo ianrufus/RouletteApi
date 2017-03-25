@@ -20,7 +20,7 @@ public class FakeBettingService implements IRouletteBettingService {
 		return 20; 
 	}
 	
-	public void RegisterBet(int userId, int gameId, RouletteBet bet) {
+	public void RegisterBet(int userId, RouletteBet bet) {
 		if (_userBets.containsKey(userId)) {
 			_userBets.get(userId).add(bet);
 		}

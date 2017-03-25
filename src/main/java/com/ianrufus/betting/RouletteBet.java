@@ -10,6 +10,8 @@ public class RouletteBet {
 	private double betAmount;
 	@JsonProperty
 	private BetType betType;
+	@JsonProperty
+	private int gameId;
 	
 	private boolean _hasPaidOut;
 	
@@ -21,6 +23,9 @@ public class RouletteBet {
 	
 	public BetType getBetType() { return this.betType; }
 	public void setBetType(BetType betType) { this.betType = betType; }
+	
+	public int getGameId() { return this.gameId; }
+	public void setGameId(int gameId) { this.gameId = gameId; }
 	
 	public double GetWinnings(int result) {
 		if (!_hasPaidOut) {
