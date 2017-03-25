@@ -210,6 +210,22 @@ public class RouletteControllerTests {
 	}
 	
 	@Test
+	public void getWinningsWithValidGameIdReturnsOk() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(2);
+		bet.setNumberBetOn(5);
+		bet.setGameId(1);
+		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
 	public void getWinningsCallsGetWinningsOnBettingService() throws Exception {
 		mockMvc.perform(post("/roulette/winnings")
 				.param("gameId", "10")
@@ -237,6 +253,13 @@ public class RouletteControllerTests {
 	public void getNumberOfBetsWithNoGameIdReturnsBadRequest() throws Exception {
 		mockMvc.perform(post("/roulette/numberofbets"))
 				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getNumberOfBetsWithValidGameIdReturnsOk() throws Exception {
+		mockMvc.perform(post("/roulette/numberofbets")
+				.param("gameId", "2"))
+				.andExpect(status().isOk());
 	}
 	
 	@Test
@@ -269,10 +292,53 @@ public class RouletteControllerTests {
 	}
 	
 	@Test
+	public void getTotalPayoutWithValidGameIdReturnsOk() throws Exception {
+		mockMvc.perform(post("/roulette/totalpayout")
+				.param("gameId", "2"))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
 	public void getTotalPayoutCallsGetAllUserWinningsForGameOnBettingService() throws Exception {
 		mockMvc.perform(post("/roulette/totalpayout")
 				.param("gameId", "2"));
 		
 		Mockito.verify(this.bettingService, Mockito.times(1)).GetAllUserWinningsForGame(2);
+	}
+	
+	// House Profit
+	@Test
+	public void getHouseProfitWithNegativeGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofit")
+				.param("gameId", "-10"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitWithZeroGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofit")
+				.param("gameId", "0"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitWithNoGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofit"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitWithValidGameIdReturnsOk() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofit")
+				.param("gameId", "2"))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getHouseProfitCallsGetHouseProfitForGameOnBettingService() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofit")
+				.param("gameId", "2"));
+		
+		Mockito.verify(this.bettingService, Mockito.times(1)).GetHouseProfitForGame(2);
 	}
 }

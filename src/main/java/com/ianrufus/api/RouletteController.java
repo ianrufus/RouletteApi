@@ -71,9 +71,12 @@ public class RouletteController {
 	}
 	
 	@RequestMapping("houseprofit")
-	public double GetHouseProfit(@RequestParam(value="gameId") int gameId) {
-		// Get the total amount of profit for the house for a specific game
-		return 0;
+	public ResponseEntity<Double> GetHouseProfit(@RequestParam(value="gameId") int gameId) {
+		if (gameId > 0) {
+			double totalProfit = _bettingService.GetHouseProfitForGame(gameId); 
+			return new ResponseEntity<Double>(totalProfit, HttpStatus.OK);
+		}
+		return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping("resultsovertime")

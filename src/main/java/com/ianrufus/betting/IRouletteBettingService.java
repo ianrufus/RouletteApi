@@ -5,5 +5,7 @@ public interface IRouletteBettingService {
 	
 	double GetAllUserWinningsForGame(int gameId);
 	
+	double GetHouseProfitForGame(int gameId);
+	
 	void RegisterBet(int userId, RouletteBet bet);
 }
