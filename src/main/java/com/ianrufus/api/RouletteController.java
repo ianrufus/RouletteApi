@@ -62,9 +62,12 @@ public class RouletteController {
 	}
 	
 	@RequestMapping("totalpayout")
-	public double GetTotalPayout(@RequestParam(value="gameId") int gameId) {
-		// Get the total amount paid out to all users for a specific game
-		return 0;
+	public ResponseEntity<Double> GetTotalPayout(@RequestParam(value="gameId") int gameId) {
+		if (gameId > 0) {
+			double totalPayout = _bettingService.GetAllUserWinningsForGame(gameId); 
+			return new ResponseEntity<Double>(totalPayout, HttpStatus.OK);
+		}
+		return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping("houseprofit")

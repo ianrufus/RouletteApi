@@ -247,4 +247,32 @@ public class RouletteControllerTests {
 		Mockito.verify(this.gameHistory, Mockito.times(1)).GetNumberOfBets(10);
 	}
 
+	// Total Payout
+	@Test
+	public void getTotalPayoutWithNegativeGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/totalpayout")
+				.param("gameId", "-10"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getTotalPayoutWithZeroGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/totalpayout")
+				.param("gameId", "0"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getTotalPayoutWithNoGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/totalpayout"))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getTotalPayoutCallsGetAllUserWinningsForGameOnBettingService() throws Exception {
+		mockMvc.perform(post("/roulette/totalpayout")
+				.param("gameId", "2"));
+		
+		Mockito.verify(this.bettingService, Mockito.times(1)).GetAllUserWinningsForGame(2);
+	}
 }
