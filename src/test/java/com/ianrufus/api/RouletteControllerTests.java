@@ -50,6 +50,8 @@ public class RouletteControllerTests {
 	@Test
 	public void validBetReturnsOk() throws Exception {
 		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(10);
+		bet.setNumberBetOn(5);
 		
 		Gson gson = new Gson();
 		String json = gson.toJson(bet);
@@ -61,18 +63,41 @@ public class RouletteControllerTests {
 	}
 	
 	@Test
-	public void nullContentReturnsBadRequest() throws Exception {
-		
+	public void emptyContentReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(new byte[0]))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
 	public void zeroBetAmountReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(0);
+		bet.setNumberBetOn(5);
 		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
 	public void negativeBetAmountReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+		bet.setBetAmount(-10);
+		bet.setNumberBetOn(5);
 		
+		Gson gson = new Gson();
+		String json = gson.toJson(bet);
+		
+		mockMvc.perform(post("/roulette/bet")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json))
+				.andExpect(status().isBadRequest());
 	}
 	
 	@Test
