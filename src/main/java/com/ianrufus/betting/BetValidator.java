@@ -26,6 +26,8 @@ public class BetValidator {
 		    totalBetAmount += bet.getBetAmount();
 		    if (bet.getGameId() <= 0 ||
 		          bet.getBetAmount() <= 0 ||
+		          bet.getNumberBetOn() < 0 ||
+		          bet.getNumberBetOn() > 36 ||
 		          userBalance < totalBetAmount) {
 		    	return false;
 		    }

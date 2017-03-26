@@ -86,6 +86,40 @@ public class RouletteControllerTests {
 	}
 	
 	@Test
+	public void invalidBetNumberReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+	    bet.setBetAmount(10);
+	    bet.setNumberBetOn(37);
+	    bet.setGameId(1);
+	    List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
+	    
+	    Gson gson = new Gson();
+	      String json = gson.toJson(bets);
+	    
+	    mockMvc.perform(post("/roulette/bet")
+	    		.contentType(MediaType.APPLICATION_JSON)
+	            .content(json))
+	            .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void negativeBetNumberReturnsBadRequest() throws Exception {
+		RouletteBet bet = new RouletteBet();
+	    bet.setBetAmount(10);
+	    bet.setNumberBetOn(-1);
+	    bet.setGameId(1);
+	    List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
+	    
+	    Gson gson = new Gson();
+	      String json = gson.toJson(bets);
+	    
+	    mockMvc.perform(post("/roulette/bet")
+	    		.contentType(MediaType.APPLICATION_JSON)
+	            .content(json))
+	            .andExpect(status().isBadRequest());
+	}
+	
+	@Test
 	public void zeroBetAmountReturnsBadRequest() throws Exception {
 		RouletteBet bet = new RouletteBet();
 		bet.setBetAmount(0);
@@ -706,6 +740,14 @@ public class RouletteControllerTests {
 		        .param("gameId", "2")
 		        .param("gameResult", "-1"))
 		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void registerGameResultWithInvalidGameResultReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/registergameresult") 
+		        .param("gameId", "2") 
+		        .param("gameResult", "37")) 
+		     	.andExpect(status().isBadRequest()); 
 	}
 	
 	@Test
