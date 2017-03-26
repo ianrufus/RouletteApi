@@ -29,6 +29,8 @@ public class RouletteController {
 	private IUserManager _userManager;
 	@Autowired
 	private IGameHistory _gameHistory;
+	@Autowired
+	private IAuthenticationService _authService;
 	
 	/*
 	 * Endpoint for placing bets for a user
@@ -88,6 +90,9 @@ public class RouletteController {
 	 */
 	@RequestMapping("houseprofit")
 	public ResponseEntity<Double> GetHouseProfit(@RequestParam(value="gameId") int gameId) {
+		if (!_authService.IsAdmin()) {
+			return new ResponseEntity<Double>(HttpStatus.UNAUTHORIZED);
+		}
 		if (gameId > 0) {
 			double totalProfit = _bettingService.GetHouseProfitForGame(gameId); 
 			return new ResponseEntity<Double>(totalProfit, HttpStatus.OK);
@@ -100,6 +105,9 @@ public class RouletteController {
 	 */
 	@RequestMapping("registergameresult")
 	public ResponseEntity RegisterGameResult(@RequestParam(value="gameId") int gameId, @RequestParam(value="gameResult") int gameResult) {
+		if (!_authService.IsAdmin()) {
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
 		if (gameId > 0 && gameResult >= 0 && gameResult <= 36) {
 			_gameHistory.RegisterGameResult(gameId, gameResult);
 			return new ResponseEntity(HttpStatus.OK);
@@ -113,6 +121,9 @@ public class RouletteController {
 	@RequestMapping("resultsovertime")
 	public ResponseEntity<List<Integer>> GetResultsOverTime(@RequestParam(value="startDate") String startDate,
 									@RequestParam(value="endDate") String endDate) {
+		if (!_authService.IsAdmin()) {
+			return new ResponseEntity<List<Integer>>(HttpStatus.UNAUTHORIZED);
+		}
 		DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
 	    if (validDates != null) {
 	    	List<Integer> results = _gameHistory.GetResults(validDates.startDate, validDates.endDate);
@@ -128,6 +139,9 @@ public class RouletteController {
 	@RequestMapping("betsovertime")
 	  public ResponseEntity<Integer> GetNumberOfBetsOverTime(@RequestParam(value="startDate") String startDate,
 	                    @RequestParam(value="endDate") String endDate) {
+		if (!_authService.IsAdmin()) {
+			return new ResponseEntity<Integer>(HttpStatus.UNAUTHORIZED);
+		}
 		DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
 	    if (validDates != null) {
 	    	int totalBets = _bettingService.GetNumberOfBetsOverTime(validDates.startDate, validDates.endDate);
@@ -143,6 +157,9 @@ public class RouletteController {
 	  @RequestMapping("payoutovertime")
 	  public ResponseEntity<Double> GetTotalPayoutOverTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
+		  if (!_authService.IsAdmin()) {
+				return new ResponseEntity<Double>(HttpStatus.UNAUTHORIZED);
+		  }
 		  DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
 		  if (validDates != null) {
 			  double totalPayout = _bettingService.GetPayoutOverTime(validDates.startDate, validDates.endDate);
@@ -158,6 +175,9 @@ public class RouletteController {
 	  @RequestMapping("houseprofitovertime")
 	  public ResponseEntity<Double> GetHouseProfitOVerTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
+		  if (!_authService.IsAdmin()) {
+				return new ResponseEntity<Double>(HttpStatus.UNAUTHORIZED);
+		  }
 		  DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
 		  if (validDates != null) {
 			  double totalPayout = _bettingService.GetHouseProfitOverTime(validDates.startDate, validDates.endDate);

@@ -28,7 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.google.gson.Gson;
-import com.ianrufus.account.FakeUserManager;
+import com.ianrufus.account.*;
 import com.ianrufus.betting.FakeBettingService;
 import com.ianrufus.betting.RouletteBet;
 import com.ianrufus.game.FakeGameHistory;
@@ -49,10 +49,14 @@ public class RouletteControllerTests {
 	@MockBean
 	private FakeGameHistory gameHistory;
 	
+	@MockBean
+	private FakeAuthenticationService authService;
+	
 	@Before
 	public void setup() {
 		given(this.userManager.GetCurrentUserId()).willReturn(123);
 		given(this.userManager.GetUserBalance(123)).willReturn(150d);
+		given(this.authService.IsAdmin()).willReturn(true);
 	}
 	
 	// Place Bet
