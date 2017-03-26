@@ -11,5 +11,7 @@ public interface IRouletteBettingService {
 	
 	int GetNumberOfBets(Date startDate, Date endDate);
 	
+	double GetPayoutOverTime(Date startDate, Date endDate);
+	
 	void RegisterBet(int userId, RouletteBet bet);
 }
