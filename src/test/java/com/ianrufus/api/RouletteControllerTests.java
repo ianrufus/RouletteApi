@@ -682,4 +682,46 @@ public class RouletteControllerTests {
 	    Date endDate = dateFormat.parse("2016-11-10");
 	    Mockito.verify(this.bettingService, Mockito.times(1)).GetWinningsOverTime(startDate, endDate, 123);
 	}
+	
+	// Register Game Result
+	@Test
+	public void registerGameResultWithNegativeGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/registergameresult")
+		        .param("gameId", "-2")
+		        .param("gameResult", "17"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void registerGameResultWithZeroGameIdReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/registergameresult")
+		        .param("gameId", "0")
+		        .param("gameResult", "17"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void registerGameResultWithNegativeGameResultReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/registergameresult")
+		        .param("gameId", "2")
+		        .param("gameResult", "-1"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void registerGameResultWithValidParametersReturnsOk() throws Exception {
+		mockMvc.perform(post("/roulette/registergameresult")
+		        .param("gameId", "2")
+		        .param("gameResult", "17"))
+		        .andExpect(status().isOk());
+	}
+	
+	@Test
+	public void registerGameResultCallsRegisterGameResultOnGameHistory() throws Exception {
+		mockMvc.perform(post("/roulette/registergameresult")
+		        .param("gameId", "2")
+		        .param("gameResult", "17"));
+		
+		Mockito.verify(this.gameHistory, Mockito.times(1)).RegisterGameResult(2, 17);
+	}
 }

@@ -17,6 +17,10 @@ public class FakeGameHistory implements IGameHistory {
 		return 231;
 	}
 	
+	public void RegisterGameResult(int gameId, int gameResult) {
+		
+	}
+	
 	public List<Integer> GetResults(Date startDate, Date endDate) {
 		return new ArrayList<Integer>(Arrays.asList(34,12,7,30,15));
 	}

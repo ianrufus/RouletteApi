@@ -84,6 +84,15 @@ public class RouletteController {
 		return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	}
 	
+	@RequestMapping("registergameresult")
+	public ResponseEntity RegisterGameResult(@RequestParam(value="gameId") int gameId, @RequestParam(value="gameResult") int gameResult) {
+		if (gameId > 0 && gameResult >= 0) {
+			_gameHistory.RegisterGameResult(gameId, gameResult);
+			return new ResponseEntity(HttpStatus.OK);
+	    }
+	    return new ResponseEntity(HttpStatus.BAD_REQUEST);
+	}
+	
 	@RequestMapping("resultsovertime")
 	public ResponseEntity<List<Integer>> GetResultsOverTime(@RequestParam(value="startDate") String startDate,
 									@RequestParam(value="endDate") String endDate) {
