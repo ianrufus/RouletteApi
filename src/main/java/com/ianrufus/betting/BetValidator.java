@@ -35,4 +35,78 @@ public class BetValidator {
 		
 		return true;
 	}
+	
+	public static boolean IsWinningBet(RouletteBet bet, int result) {
+		if (bet.getBetType() == null) {
+			if (bet.getNumberBetOn() == result) {
+				return true;
+			}
+			return false;
+		}
+		
+		switch (bet.getBetType()) { 
+	     	case LOW: 
+	     		if (result < 19) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case HIGH: 
+	     		if (result > 18) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case RED: 
+	     		if (redNumbers.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case BLACK: 
+	     		if (blackNumbers.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case EVEN: 
+	     		if ((result & 1) == 0) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case ODD: 
+	     		if ((result & 1) != 0) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case FIRST_DOZEN: 
+	     		if (firstDozen.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case SECOND_DOZEN: 
+	     		if (secondDozen.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case THIRD_DOZEN: 
+	     		if (thirdDozen.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case FIRST_COLUMN: 
+	     		if (firstColumn.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case SECOND_COLUMN: 
+	     		if (secondColumn.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	     	case THIRD_COLUMN: 
+	     		if (thirdColumn.contains(result)) { 
+	     			return true; 
+	     		} 
+	     		break; 
+	    } 
+	     
+	    return false; 
+	}
 } 

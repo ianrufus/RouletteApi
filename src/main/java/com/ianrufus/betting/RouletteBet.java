@@ -28,17 +28,15 @@ public class RouletteBet {
 	public void setGameId(int gameId) { this.gameId = gameId; }
 	
 	public double GetWinnings(int result) {
-		if (!_hasPaidOut) {
+		if (!_hasPaidOut && BetValidator.IsWinningBet(this, result)) {
 			_hasPaidOut = true;
 			
+			// If betType is null, a single number has been bet on
 			if (betType != null) {
-				// If BetType isn't null, it's a pre-defined bet
+				// Otherwise it's a pre-defined bet
 				return GetSpecialBetWinnings(result);
 			}
-			else if (result == numberBetOn) {
-				// Otherwise a single number has been bet on
-				return betAmount * 36;
-			}
+			return betAmount * 36;
 		}
 		
 		return 0;
@@ -47,65 +45,19 @@ public class RouletteBet {
 	private double GetSpecialBetWinnings(int result) {
 		switch (betType) {
 			case LOW:
-				if (result < 19) {
-					return betAmount * 2;
-				}
-				break;
 			case HIGH:
-				if (result > 18) {
-					return betAmount * 2;
-				}
-				break;
 			case RED:
-				if (BetValidator.redNumbers.contains(result)) {
-					return betAmount * 2;
-				}
-				break;
 			case BLACK:
-				if (BetValidator.blackNumbers.contains(result)) {
-					return betAmount * 2;
-				}
-				break;
 			case EVEN:
-				if ((result & 1) == 0) {
-					return betAmount * 2;
-				}
-				break;
 			case ODD:
-				if ((result & 1) != 0) {
-					return betAmount * 2;
-				}
-				break;
+				return betAmount * 2;
 			case FIRST_DOZEN:
-				if (BetValidator.firstDozen.contains(result)) {
-					return betAmount * 3;
-				}
-				break;
 			case SECOND_DOZEN:
-				if (BetValidator.secondDozen.contains(result)) {
-					return betAmount * 3;
-				}
-				break;
 			case THIRD_DOZEN:
-				if (BetValidator.thirdDozen.contains(result)) {
-					return betAmount * 3;
-				}
-				break;
 			case FIRST_COLUMN:
-				if (BetValidator.firstColumn.contains(result)) {
-					return betAmount * 3;
-				}
-				break;
 			case SECOND_COLUMN:
-				if (BetValidator.secondColumn.contains(result)) {
-					return betAmount * 3;
-				}
-				break;
 			case THIRD_COLUMN:
-				if (BetValidator.thirdColumn.contains(result)) {
-					return betAmount * 3;
-				}
-				break;
+				return betAmount * 3;
 		}
 		return 0;
 	}
