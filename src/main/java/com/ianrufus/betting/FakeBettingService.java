@@ -42,14 +42,45 @@ public class FakeBettingService implements IRouletteBettingService {
 	}
 	
 	public double GetAllUserWinningsForGame(int gameId) {
-		return gameId * 10;
+		double winnings = 0;
+	    for ( List<RouletteBet> bets : _userBets.values() ) {
+	    	for (RouletteBet bet : bets) {
+	    		if (bet.getGameId() == gameId) {
+	    			winnings += bet.getWinningsAmount();
+	    		}
+	    	}
+	    }
+	    
+	    return winnings; 
 	}
 	
 	public double GetHouseProfitForGame(int gameId) {
-		return gameId * 5;
+		double houseProfit = 0;
+	    for ( List<RouletteBet> bets : _userBets.values() ) {
+	    	for (RouletteBet bet : bets) {
+	    		if (bet.getGameId() == gameId) {
+	    			houseProfit += bet.getBetAmount() + bet.getWinningsAmount();
+	    		}
+	    	}
+	    }
+	    
+	    return houseProfit;
 	}
 	
-	public int GetNumberOfBets(Date startDate, Date endDate) {
+	public int GetNumberOfBets(int gameId) {
+		int numberOfBets = 0;
+	    for ( List<RouletteBet> bets : _userBets.values() ) {
+	    	for (RouletteBet bet : bets) {
+	    		if (bet.getGameId() == gameId) {
+	    			numberOfBets++;
+	    		}
+	    	}
+	    }
+	    
+	    return numberOfBets; 
+	}
+	
+	public int GetNumberOfBetsOverTime(Date startDate, Date endDate) {
 		return 213;
 	}
 	

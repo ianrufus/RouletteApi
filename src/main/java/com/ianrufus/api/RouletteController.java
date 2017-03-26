@@ -56,7 +56,7 @@ public class RouletteController {
 	@RequestMapping("numberofbets")
 	public ResponseEntity<Integer> GetNumberOfBets(@RequestParam(value="gameId") int gameId) {
 		if (gameId > 0) {
-			int numberOfBets =  _gameHistory.GetNumberOfBets(gameId); 
+			int numberOfBets =  _bettingService.GetNumberOfBets(gameId); 
 		    return new ResponseEntity<Integer>(numberOfBets, HttpStatus.OK); 
 		}
 		return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
@@ -106,7 +106,7 @@ public class RouletteController {
 	                    @RequestParam(value="endDate") String endDate) {
 		DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
 	    if (validDates != null) {
-	    	int totalBets = _bettingService.GetNumberOfBets(validDates.startDate, validDates.endDate);
+	    	int totalBets = _bettingService.GetNumberOfBetsOverTime(validDates.startDate, validDates.endDate);
 	    	return new ResponseEntity<Integer>(totalBets, HttpStatus.OK);
 	    }
 	    

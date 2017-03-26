@@ -12,6 +12,7 @@ public class RouletteBet {
 	private BetType betType;
 	@JsonProperty
 	private int gameId;
+	private double winnings;
 	
 	private boolean _hasPaidOut;
 	
@@ -27,16 +28,23 @@ public class RouletteBet {
 	public int getGameId() { return this.gameId; }
 	public void setGameId(int gameId) { this.gameId = gameId; }
 	
+	public double getWinningsAmount() { return this.winnings; }
+	public void setWinningsAmount(double winnings) { this.winnings = winnings; };
+	
 	public double GetWinnings(int result) {
 		if (!_hasPaidOut && BetValidator.IsWinningBet(this, result)) {
 			_hasPaidOut = true;
 			
 			// If betType is null, a single number has been bet on
+			double betWinnings = 0;
 			if (betType != null) {
 				// Otherwise it's a pre-defined bet
-				return GetSpecialBetWinnings(result);
+				setWinningsAmount(GetSpecialBetWinnings(result));
 			}
-			return betAmount * 36;
+			else {
+				setWinningsAmount(betAmount * 36);
+			}
+			return getWinningsAmount();
 		}
 		
 		return 0;

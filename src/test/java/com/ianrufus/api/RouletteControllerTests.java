@@ -300,7 +300,7 @@ public class RouletteControllerTests {
 		mockMvc.perform(post("/roulette/numberofbets")
 				.param("gameId", "10"));
 		
-		Mockito.verify(this.gameHistory, Mockito.times(1)).GetNumberOfBets(10);
+		Mockito.verify(this.bettingService, Mockito.times(1)).GetNumberOfBets(10);
 	}
 
 	// Total Payout
@@ -509,7 +509,7 @@ public class RouletteControllerTests {
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	    Date startDate = dateFormat.parse("2016-06-20");
 	    Date endDate = dateFormat.parse("2016-11-10");
-	    Mockito.verify(this.bettingService, Mockito.times(1)).GetNumberOfBets(startDate, endDate);
+	    Mockito.verify(this.bettingService, Mockito.times(1)).GetNumberOfBetsOverTime(startDate, endDate);
 	}
 	
 	// Total Payout Over Time

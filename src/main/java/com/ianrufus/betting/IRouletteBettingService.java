@@ -10,7 +10,9 @@ public interface IRouletteBettingService {
 	
 	double GetHouseProfitForGame(int gameId);
 	
-	int GetNumberOfBets(Date startDate, Date endDate);
+	int GetNumberOfBets(int gameId);
+	
+	int GetNumberOfBetsOverTime(Date startDate, Date endDate);
 	
 	double GetPayoutOverTime(Date startDate, Date endDate);
 	
