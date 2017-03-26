@@ -65,13 +65,12 @@ public class FakeBettingService implements IRouletteBettingService {
 		return 20;
 	}
 	
-	public void RegisterBet(int userId, RouletteBet bet) {
+	public void RegisterBets(int userId, List<RouletteBet> bets) {
 		if (_userBets.containsKey(userId)) {
-			_userBets.get(userId).add(bet);
+			_userBets.get(userId).addAll(bets);
 		}
 		else {
-			List<RouletteBet> userBets = new ArrayList<RouletteBet>(Arrays.asList(bet));
-			_userBets.put(userId, userBets);
+			_userBets.put(userId, bets);
 		}
 	}
 } 

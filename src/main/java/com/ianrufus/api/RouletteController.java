@@ -34,15 +34,14 @@ public class RouletteController {
 	private IGameHistory _gameHistory;
 	
 	@RequestMapping("bet")
-	public ResponseEntity<String> PlaceBet(@RequestBody RouletteBet bet) {
+	public ResponseEntity<String> PlaceBets(@RequestBody List<RouletteBet> bets) {
 		int userId = _userManager.GetCurrentUserId();
-		if (bet.getGameId() > 0
-				&& bet.getBetAmount() > 0
-				&& _userManager.GetUserBalance(userId) > bet.getBetAmount()) {			
-			int gameId = 1;
-			_bettingService.RegisterBet(userId, bet);
+		double userBalance = _userManager.GetUserBalance(userId);
+		if (BetValidator.AreBetsValid(bets, userBalance)) {
+			_bettingService.RegisterBets(userId, bets);
 			return new ResponseEntity<String>(HttpStatus.OK);
 		}
+		
 		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);		
 	}
 	   

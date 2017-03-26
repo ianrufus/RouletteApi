@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -65,9 +66,10 @@ public class RouletteControllerTests {
 		bet.setBetAmount(10);
 		bet.setNumberBetOn(5);
 		bet.setGameId(1);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -89,9 +91,10 @@ public class RouletteControllerTests {
 		bet.setBetAmount(0);
 		bet.setNumberBetOn(5);
 		bet.setGameId(1);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -105,9 +108,10 @@ public class RouletteControllerTests {
 		bet.setBetAmount(-10);
 		bet.setNumberBetOn(5);
 		bet.setGameId(1);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -121,9 +125,10 @@ public class RouletteControllerTests {
 		bet.setBetAmount(200);
 		bet.setNumberBetOn(5);
 		bet.setGameId(1);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -137,9 +142,10 @@ public class RouletteControllerTests {
 		bet.setBetAmount(20);
 		bet.setNumberBetOn(5);
 		bet.setGameId(0);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -153,9 +159,10 @@ public class RouletteControllerTests {
 		bet.setBetAmount(20);
 		bet.setNumberBetOn(5);
 		bet.setGameId(-1);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
@@ -169,15 +176,16 @@ public class RouletteControllerTests {
 		bet.setBetAmount(20);
 		bet.setNumberBetOn(5);
 		bet.setGameId(1);
+		List<RouletteBet> bets = new ArrayList<RouletteBet>(Arrays.asList(bet));
 		
 		Gson gson = new Gson();
-		String json = gson.toJson(bet);
+		String json = gson.toJson(bets);
 		
 		mockMvc.perform(post("/roulette/bet")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json));
 		
-		Mockito.verify(this.bettingService, Mockito.times(1)).RegisterBet(eq(123), any(RouletteBet.class));
+		Mockito.verify(this.bettingService, Mockito.times(1)).RegisterBets(eq(123), anyListOf(RouletteBet.class));
 	}
 	
 	// Winnings
@@ -214,17 +222,9 @@ public class RouletteControllerTests {
 	
 	@Test
 	public void getWinningsWithValidGameIdReturnsOk() throws Exception {
-		RouletteBet bet = new RouletteBet();
-		bet.setBetAmount(2);
-		bet.setNumberBetOn(5);
-		bet.setGameId(1);
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(bet);
-		
-		mockMvc.perform(post("/roulette/bet")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json))
+		mockMvc.perform(post("/roulette/winnings")
+				.param("gameId", "10")
+				.param("gameResult", "5"))
 				.andExpect(status().isOk());
 	}
 	

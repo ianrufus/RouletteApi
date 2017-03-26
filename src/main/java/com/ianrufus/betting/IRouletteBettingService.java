@@ -1,6 +1,7 @@
 package com.ianrufus.betting;
 
 import java.util.Date;
+import java.util.List;
 
 public interface IRouletteBettingService {
 	double GetWinnings(int userId, int gameId, int gameResult);
@@ -17,5 +18,5 @@ public interface IRouletteBettingService {
 	
 	double GetWinningsOverTime(Date startDate, Date endDate, int userId);
 	
-	void RegisterBet(int userId, RouletteBet bet);
+	void RegisterBets(int userId, List<RouletteBet> bets);
 }
