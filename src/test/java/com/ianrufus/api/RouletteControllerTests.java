@@ -548,4 +548,71 @@ public class RouletteControllerTests {
 	    Date endDate = dateFormat.parse("2016-11-10");
 	    Mockito.verify(this.bettingService, Mockito.times(1)).GetPayoutOverTime(startDate, endDate);
 	}
+	
+	// House Profit Over Time
+	@Test
+	public void getHouseProfitOverTimeWithNoStartDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "2016-11-20"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitOverTimeWithNoEndDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("endDate", "2016-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitOverTimeWithEndDateBeforeStartDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "2016-11-20")
+		        .param("endDate", "2016-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitOverTimeWithEndDateAfterCurrentDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "2016-11-20")
+		        .param("endDate", "2017-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitOverTimeWithInvalidStartDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "not a date")
+		        .param("endDate", "2017-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitOverTimeWithInvalidEndDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "2016-11-20")
+		        .param("endDate", "not a date"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getHouseProfitOverTimeWithValidDatesReturnsOk() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "2016-06-20")
+		        .param("endDate", "2016-11-10"))
+		        .andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getPHouseProfitOverTimeCallsGetResultsOnGameHistory() throws Exception {
+		mockMvc.perform(post("/roulette/houseprofitovertime")
+		        .param("startDate", "2016-06-20")
+		        .param("endDate", "2016-11-10"));
+		
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
+	    Date startDate = dateFormat.parse("2016-06-20"); 
+	    Date endDate = dateFormat.parse("2016-11-10"); 
+	    Mockito.verify(this.bettingService, Mockito.times(1)).GetHouseProfitOverTime(startDate, endDate);
+	}
 }

@@ -57,6 +57,10 @@ public class FakeBettingService implements IRouletteBettingService {
 		return 50;
 	}
 	
+	public double GetHouseProfitOverTime(Date startDate, Date endDate) {
+		return 30;
+	}
+	
 	public void RegisterBet(int userId, RouletteBet bet) {
 		if (_userBets.containsKey(userId)) {
 			_userBets.get(userId).add(bet);
