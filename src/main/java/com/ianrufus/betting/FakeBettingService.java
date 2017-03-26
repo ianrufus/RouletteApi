@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.springframework.stereotype.Service; 
 
@@ -46,6 +47,10 @@ public class FakeBettingService implements IRouletteBettingService {
 	
 	public double GetHouseProfitForGame(int gameId) {
 		return gameId * 5;
+	}
+	
+	public int GetNumberOfBets(Date startDate, Date endDate) {
+		return 213;
 	}
 	
 	public void RegisterBet(int userId, RouletteBet bet) {

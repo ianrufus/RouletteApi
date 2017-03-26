@@ -108,10 +108,25 @@ public class RouletteController {
 	}
 	
 	@RequestMapping("betsovertime")
-	  public int GetNumberOfBetsOverTime(@RequestParam(value="startDate") Date startDate,
-	                    @RequestParam(value="endDate") Date endDate) {
-	    // Get the total number of bets placed for all games in the given time period
-	    return 0;
+	  public ResponseEntity<Integer> GetNumberOfBetsOverTime(@RequestParam(value="startDate") String startDate,
+	                    @RequestParam(value="endDate") String endDate) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    Date convertedStartDate;
+	    Date convertedEndDate;
+	    try {
+	      convertedStartDate = dateFormat.parse(startDate);
+	      convertedEndDate = dateFormat.parse(endDate);
+	    } catch (ParseException e) {
+	      return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
+	    }
+	    Date today = Calendar.getInstance().getTime();
+	    
+	    if (convertedStartDate.before(convertedEndDate) &&
+	        convertedEndDate.before(today)) {
+	      int totalBets = _bettingService.GetNumberOfBets(convertedStartDate, convertedEndDate);
+	      return new ResponseEntity<Integer>(totalBets, HttpStatus.OK);
+	    }
+	    return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
 	  }
 	  
 	  @RequestMapping("payoutovertime")

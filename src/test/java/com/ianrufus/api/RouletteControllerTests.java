@@ -414,4 +414,71 @@ public class RouletteControllerTests {
 	    Date endDate = dateFormat.parse("2016-11-10");
 	    Mockito.verify(this.gameHistory, Mockito.times(1)).GetResults(startDate, endDate);
 	}
+	
+	// Number of Bets Over Time
+	@Test
+	public void getBetsOverTimeWithNoStartDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "2016-11-20"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getBetsOverTimeWithNoEndDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("endDate", "2016-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getBetsOverTimeWithEndDateBeforeStartDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "2016-11-20")
+		        .param("endDate", "2016-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getBetsOverTimeWithEndDateAfterCurrentDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "2016-11-20")
+		        .param("endDate", "2017-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getBetsOverTimeWithInvalidStartDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "not a date")
+		        .param("endDate", "2017-11-10"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getBetsOverTimeWithInvalidEndDateReturnsBadRequest() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "2016-11-20")
+		        .param("endDate", "not a date"))
+		        .andExpect(status().isBadRequest());
+	}
+	
+	@Test
+	public void getBetsOverTimeWithValidDatesReturnsOk() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "2016-06-20")
+		        .param("endDate", "2016-11-10"))
+		        .andExpect(status().isOk());
+	}
+	
+	@Test
+	public void getBetsOverTimeCallsGetResultsOnGameHistory() throws Exception {
+		mockMvc.perform(post("/roulette/betsovertime")
+		        .param("startDate", "2016-06-20")
+		        .param("endDate", "2016-11-10"));
+		
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	    Date startDate = dateFormat.parse("2016-06-20");
+	    Date endDate = dateFormat.parse("2016-11-10");
+	    Mockito.verify(this.bettingService, Mockito.times(1)).GetNumberOfBets(startDate, endDate);
+	}
 }
