@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 import com.ianrufus.account.FakeUserManager;
 import com.ianrufus.betting.FakeBettingService;
 import com.ianrufus.betting.RouletteBet;
-import com.ianrufus.database.FakeDbClient;
 import com.ianrufus.game.FakeGameHistory;
 
 @RunWith(SpringRunner.class)
@@ -46,9 +45,6 @@ public class RouletteControllerTests {
 	
 	@MockBean
 	private FakeUserManager userManager;
-	
-	@MockBean
-	private FakeDbClient dbClient;
 	
 	@MockBean
 	private FakeGameHistory gameHistory;

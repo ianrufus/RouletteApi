@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.ianrufus.betting.*;
 import com.ianrufus.account.*;
-import com.ianrufus.database.*;
 import com.ianrufus.game.*;
  
 @RestController 
@@ -28,8 +27,6 @@ public class RouletteController {
 	private IRouletteBettingService _bettingService;
 	@Autowired
 	private IUserManager _userManager;
-	@Autowired
-	private IDbClient _dbClient;
 	@Autowired
 	private IGameHistory _gameHistory;
 	
