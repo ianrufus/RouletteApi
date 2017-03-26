@@ -87,22 +87,11 @@ public class RouletteController {
 	@RequestMapping("resultsovertime")
 	public ResponseEntity<List<Integer>> GetResultsOverTime(@RequestParam(value="startDate") String startDate,
 									@RequestParam(value="endDate") String endDate) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		Date convertedStartDate;
-		Date convertedEndDate;
-		try {
-			convertedStartDate = dateFormat.parse(startDate);
-			convertedEndDate = dateFormat.parse(endDate);
-		} catch (ParseException e) {
-			return new ResponseEntity<List<Integer>>(HttpStatus.BAD_REQUEST);
-		}
-		Date today = Calendar.getInstance().getTime();
-		
-		if (convertedStartDate.before(convertedEndDate) &&
-				convertedEndDate.before(today)) {
-			List<Integer> results = _gameHistory.GetResults(convertedStartDate, convertedEndDate);
-			return new ResponseEntity<List<Integer>>(results, HttpStatus.OK);
-		}
+		DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
+	    if (validDates != null) {
+	    	List<Integer> results = _gameHistory.GetResults(validDates.startDate, validDates.endDate);
+	        return new ResponseEntity<List<Integer>>(results, HttpStatus.OK);
+	    }
 		
 		return new ResponseEntity<List<Integer>>(HttpStatus.BAD_REQUEST);
 	}
@@ -110,43 +99,22 @@ public class RouletteController {
 	@RequestMapping("betsovertime")
 	  public ResponseEntity<Integer> GetNumberOfBetsOverTime(@RequestParam(value="startDate") String startDate,
 	                    @RequestParam(value="endDate") String endDate) {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	    Date convertedStartDate;
-	    Date convertedEndDate;
-	    try {
-	    	convertedStartDate = dateFormat.parse(startDate);
-	    	convertedEndDate = dateFormat.parse(endDate);
-	    } catch (ParseException e) {
-	    	return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
-	    }
-	    Date today = Calendar.getInstance().getTime();
-	    
-	    if (convertedStartDate.before(convertedEndDate) &&
-	        convertedEndDate.before(today)) {
-	    	int totalBets = _bettingService.GetNumberOfBets(convertedStartDate, convertedEndDate);
+		DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
+	    if (validDates != null) {
+	    	int totalBets = _bettingService.GetNumberOfBets(validDates.startDate, validDates.endDate);
 	    	return new ResponseEntity<Integer>(totalBets, HttpStatus.OK);
 	    }
+	    
 	    return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
 	  }
 	  
 	  @RequestMapping("payoutovertime")
 	  public ResponseEntity<Double> GetTotalPayoutOverTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
-		  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); 
-		  Date convertedStartDate;
-		  Date convertedEndDate;
-		  try {
-			  convertedStartDate = dateFormat.parse(startDate);
-			  convertedEndDate = dateFormat.parse(endDate);
-		  } catch (ParseException e) {
-			  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
-		  }
-		  Date today = Calendar.getInstance().getTime();
-		  
-		  if (convertedStartDate.before(convertedEndDate) && 
-			        convertedEndDate.before(today)) { 
-			  double totalPayout = _bettingService.GetPayoutOverTime(convertedStartDate, convertedEndDate); 
-			  return new ResponseEntity<Double>(totalPayout, HttpStatus.OK); 
+		  DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
+		  if (validDates != null) {
+			  double totalPayout = _bettingService.GetPayoutOverTime(validDates.startDate, validDates.endDate);
+			  return new ResponseEntity<Double>(totalPayout, HttpStatus.OK);
 		  }
 		  
 		  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
@@ -155,22 +123,11 @@ public class RouletteController {
 	  @RequestMapping("houseprofitovertime")
 	  public ResponseEntity<Double> GetHouseProfitOVerTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
-		  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		  Date convertedStartDate;
-		  Date convertedEndDate;
-		  try {
-			  convertedStartDate = dateFormat.parse(startDate);
-			  convertedEndDate = dateFormat.parse(endDate);
-		  } catch (ParseException e) {
-			  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
+		  DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
+		  if (validDates != null) {
+			  double totalPayout = _bettingService.GetHouseProfitOverTime(validDates.startDate, validDates.endDate);
+			  return new ResponseEntity<Double>(totalPayout, HttpStatus.OK);
 		  }
-		  Date today = Calendar.getInstance().getTime();
-		  
-		  if (convertedStartDate.before(convertedEndDate) && 
-				  	convertedEndDate.before(today)) { 
-			  double totalPayout = _bettingService.GetHouseProfitOverTime(convertedStartDate, convertedEndDate); 
-			  return new ResponseEntity<Double>(totalPayout, HttpStatus.OK); 
-		  } 
 		  
 		  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	  }
@@ -178,23 +135,12 @@ public class RouletteController {
 	  @RequestMapping("winningsovertime")
 	  public ResponseEntity<Double> GetUserWinningsOverTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
-		  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		  Date convertedStartDate;
-		  Date convertedEndDate;
-		  try {
-			  convertedStartDate = dateFormat.parse(startDate);
-			  convertedEndDate = dateFormat.parse(endDate);
-		  } catch (ParseException e) {
-			  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
+		  DateValidator validDates = DateValidator.ValidDates(startDate, endDate);
+		  if (validDates != null) {
+			  int userId = _userManager.GetCurrentUserId();
+			  double totalWinnings = _bettingService.GetWinningsOverTime(validDates.startDate, validDates.endDate, userId);
+			  return new ResponseEntity<Double>(totalWinnings, HttpStatus.OK);
 		  }
-		  Date today = Calendar.getInstance().getTime();
-		  
-		  if (convertedStartDate.before(convertedEndDate) && 
-				  	convertedEndDate.before(today)) { 
-			  int userId = _userManager.GetCurrentUserId(); 
-			  double totalWinnings = _bettingService.GetWinningsOverTime(convertedStartDate, convertedEndDate, userId); 
-			  return new ResponseEntity<Double>(totalWinnings, HttpStatus.OK); 
-		  } 
 		  
 		  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	  }
