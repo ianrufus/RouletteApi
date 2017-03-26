@@ -1,6 +1,11 @@
 package com.ianrufus.api;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,9 +85,26 @@ public class RouletteController {
 	}
 	
 	@RequestMapping("resultsovertime")
-	public void GetResultsOverTime(@RequestParam(value="startDate") Date startDate,
-									@RequestParam(value="endDate") Date endDate) {
-		// Get the outcome of all games in the given time period
+	public ResponseEntity<List<Integer>> GetResultsOverTime(@RequestParam(value="startDate") String startDate,
+									@RequestParam(value="endDate") String endDate) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date convertedStartDate;
+		Date convertedEndDate;
+		try {
+			convertedStartDate = dateFormat.parse(startDate);
+			convertedEndDate = dateFormat.parse(endDate);
+		} catch (ParseException e) {
+			return new ResponseEntity<List<Integer>>(HttpStatus.BAD_REQUEST);
+		}
+		Date today = Calendar.getInstance().getTime();
+		
+		if (convertedStartDate.before(convertedEndDate) &&
+				convertedEndDate.before(today)) {
+			List<Integer> results = _gameHistory.GetResults(convertedStartDate, convertedEndDate);
+			return new ResponseEntity<List<Integer>>(results, HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<List<Integer>>(HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping("betsovertime")
