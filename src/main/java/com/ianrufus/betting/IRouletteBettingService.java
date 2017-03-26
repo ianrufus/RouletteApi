@@ -15,5 +15,7 @@ public interface IRouletteBettingService {
 	
 	double GetHouseProfitOverTime(Date startDate, Date endDate);
 	
+	double GetWinningsOverTime(Date startDate, Date endDate, int userId);
+	
 	void RegisterBet(int userId, RouletteBet bet);
 }
