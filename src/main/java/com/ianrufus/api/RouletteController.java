@@ -30,6 +30,9 @@ public class RouletteController {
 	@Autowired
 	private IGameHistory _gameHistory;
 	
+	/*
+	 * Endpoint for placing bets for a user
+	 */
 	@RequestMapping("bet")
 	public ResponseEntity<String> PlaceBets(@RequestBody List<RouletteBet> bets) {
 		int userId = _userManager.GetCurrentUserId();
@@ -41,7 +44,10 @@ public class RouletteController {
 		
 		return new ResponseEntity<String>(HttpStatus.BAD_REQUEST);		
 	}
-	   
+	
+	/*
+	 * Endpoint for getting a users winnings for a given game
+	 */
 	@RequestMapping("winnings") 
 	public ResponseEntity<Double> GetWinnings(@RequestParam(value="gameId") int gameId,
 								@RequestParam(value="gameResult") int gameResult) { 
@@ -53,6 +59,9 @@ public class RouletteController {
 		return new ResponseEntity<Double>(HttpStatus.BAD_REQUEST);
 	}
 	
+	/*
+	 * Endpoint for getting the total number of bets placed for a given game by all users
+	 */
 	@RequestMapping("numberofbets")
 	public ResponseEntity<Integer> GetNumberOfBets(@RequestParam(value="gameId") int gameId) {
 		if (gameId > 0) {
@@ -62,6 +71,9 @@ public class RouletteController {
 		return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
 	}
 	
+	/*
+	 * Endpoint for getting the total payout for a given game to all users
+	 */
 	@RequestMapping("totalpayout")
 	public ResponseEntity<Double> GetTotalPayout(@RequestParam(value="gameId") int gameId) {
 		if (gameId > 0) {
@@ -71,6 +83,9 @@ public class RouletteController {
 		return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	}
 	
+	/*
+	 * Endpoint for getting the total profit for the house on a given game
+	 */
 	@RequestMapping("houseprofit")
 	public ResponseEntity<Double> GetHouseProfit(@RequestParam(value="gameId") int gameId) {
 		if (gameId > 0) {
@@ -80,6 +95,9 @@ public class RouletteController {
 		return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	}
 	
+	/*
+	 * Endpoint for registering a game result on the game history
+	 */
 	@RequestMapping("registergameresult")
 	public ResponseEntity RegisterGameResult(@RequestParam(value="gameId") int gameId, @RequestParam(value="gameResult") int gameResult) {
 		if (gameId > 0 && gameResult >= 0 && gameResult <= 36) {
@@ -89,6 +107,9 @@ public class RouletteController {
 	    return new ResponseEntity(HttpStatus.BAD_REQUEST);
 	}
 	
+	/*
+	 * Endpoint for getting the results for all games in between the given dates
+	 */
 	@RequestMapping("resultsovertime")
 	public ResponseEntity<List<Integer>> GetResultsOverTime(@RequestParam(value="startDate") String startDate,
 									@RequestParam(value="endDate") String endDate) {
@@ -101,6 +122,9 @@ public class RouletteController {
 		return new ResponseEntity<List<Integer>>(HttpStatus.BAD_REQUEST);
 	}
 	
+	/*
+	 * Endpoint for getting the total number of bets placed by all users for all games in between the given dates
+	 */
 	@RequestMapping("betsovertime")
 	  public ResponseEntity<Integer> GetNumberOfBetsOverTime(@RequestParam(value="startDate") String startDate,
 	                    @RequestParam(value="endDate") String endDate) {
@@ -113,6 +137,9 @@ public class RouletteController {
 	    return new ResponseEntity<Integer>(0, HttpStatus.BAD_REQUEST);
 	  }
 	  
+	  /*
+	   * Endpoint for getting the total amount paid out to all users for all games in between the given dates
+	   */
 	  @RequestMapping("payoutovertime")
 	  public ResponseEntity<Double> GetTotalPayoutOverTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
@@ -125,6 +152,9 @@ public class RouletteController {
 		  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	  }
 	  
+	  /*
+	   * Endpoint for getting the total house profit from all games in between the given dates
+	   */
 	  @RequestMapping("houseprofitovertime")
 	  public ResponseEntity<Double> GetHouseProfitOVerTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
@@ -137,6 +167,9 @@ public class RouletteController {
 		  return new ResponseEntity<Double>(0d, HttpStatus.BAD_REQUEST);
 	  }
 	  
+	  /*
+	   * Endpoint for getting the total winnings for a user from all games in between the given dates
+	   */
 	  @RequestMapping("winningsovertime")
 	  public ResponseEntity<Double> GetUserWinningsOverTime(@RequestParam(value="startDate") String startDate,
 	                      @RequestParam(value="endDate") String endDate) {
